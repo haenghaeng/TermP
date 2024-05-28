@@ -6,9 +6,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
-<!--    <com.example.termp.CameraView-->
-    <SurfaceView
-        android:id="@+id/cameraView"
+    <androidx.camera.view.PreviewView
+        android:id="@+id/previewView"
         android:layout_width="match_parent"
         android:layout_height="600dp"
         android:layout_weight="1" />
