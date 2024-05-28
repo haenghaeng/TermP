@@ -33,6 +33,10 @@ class InitActivity : AppCompatActivity() {
 
     }
 
+    /**
+     * permissions 배열에 있는 모든 권한이 허가되었는지 확인함
+     * 모두다 허가되어 있다면 true, 하나라도 허가되어 있지 않다면 false를 리턴
+     */
     private fun hasPermissions(permissions: Array<String>): Boolean {
         var result: Int
 
