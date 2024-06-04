@@ -37,5 +37,4 @@ class ScanActivity : AppCompatActivity() {
             imageView.setImageURI(photoFile.toUri())
         }
     }
-
 }
