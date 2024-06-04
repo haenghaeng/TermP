@@ -2,6 +2,7 @@ package com.example.termp
 
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
@@ -9,6 +10,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import org.opencv.android.NativeCameraView.TAG
+import org.opencv.android.OpenCVLoader
 import java.io.File
 
 class ScanActivity : AppCompatActivity() {
@@ -28,6 +31,12 @@ class ScanActivity : AppCompatActivity() {
         imageView = findViewById(R.id.imageView)
 
         getImageFromCache()
+
+        if (!OpenCVLoader.initDebug()) {
+            Log.e(TAG, "OpenCV 초기화 실패!")
+        } else {
+            Log.d(TAG, "OpenCV 초기화 성공!!!!!")
+        }
     }
 
     // cache 디렉토리에 있는 cacheImageTemrP.jpg를 불러옴
