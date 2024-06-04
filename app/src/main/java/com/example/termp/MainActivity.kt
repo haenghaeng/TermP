@@ -1,6 +1,7 @@
 package com.example.termp
 
 import android.content.ContentValues
+import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -22,9 +23,9 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
-    lateinit var gallery_btn : ImageButton
-    lateinit var camera_btn : ImageButton
-    lateinit var function_btn : ImageButton
+    lateinit var galleryBtn : ImageButton
+    lateinit var cameraBtn : ImageButton
+    lateinit var functionBtn : ImageButton
     lateinit var previewView: PreviewView
     
     lateinit var photoFile : File
@@ -44,24 +45,24 @@ class MainActivity : AppCompatActivity() {
 
     fun init(){
         // 버튼, 뷰 연결
-        gallery_btn = findViewById(R.id.galleryBtn)
-        camera_btn = findViewById(R.id.cameraBtn)
-        function_btn = findViewById(R.id.functionBtn)
+        galleryBtn = findViewById(R.id.galleryBtn)
+        cameraBtn = findViewById(R.id.cameraBtn)
+        functionBtn = findViewById(R.id.functionBtn)
         previewView = findViewById(R.id.previewView)
 
         // 버튼에 리스너 설정
-        gallery_btn.setOnClickListener{
+        galleryBtn.setOnClickListener{
             gallery_btn_click()
         }
-        camera_btn.setOnClickListener{
+        cameraBtn.setOnClickListener{
             camera_btn_click()
         }
-        function_btn.setOnClickListener{
+        functionBtn.setOnClickListener{
             function_btn_click()
         }
 
         // 임시 디렉토리
-        photoFile = File(applicationContext.cacheDir,"newImage.jpg")
+        photoFile = File(applicationContext.cacheDir,"cacheImageTemrP.jpg")
 
         // 카메라 실행
         startCamera()
@@ -74,27 +75,30 @@ class MainActivity : AppCompatActivity() {
     fun camera_btn_click(){
         // 현재 화면 촬영
 
-        /////// 임시 코드
-        val name = SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-SSS", Locale.US)
-            .format(System.currentTimeMillis())
-
-        val contentValues = ContentValues().apply {
-            put(MediaStore.MediaColumns.DISPLAY_NAME, name)
-            put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
-            if(Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
-                put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/CameraX-Image")
-            }
-        }
-
-        val outputFileOptions = ImageCapture.OutputFileOptions
-            .Builder(contentResolver,
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                contentValues)
-            .build()
+        /////// 임시 코드. 버퍼에 넣지 않고 Pictures/CameraX-Image에 바로 저장하게 설정함
+//        val name = SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-SSS", Locale.US)
+//            .format(System.currentTimeMillis())
+//
+//        val contentValues = ContentValues().apply {
+//            put(MediaStore.MediaColumns.DISPLAY_NAME, name)
+//            put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
+//            if(Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
+//                put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/CameraX-Image")
+//            }
+//        }
+//
+//        val outputFileOptions = ImageCapture.OutputFileOptions
+//            .Builder(contentResolver,
+//                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+//                contentValues)
+//            .build()
         ///// 임시 코드
+        
+        // 기존 버퍼에 있던 이미지 제거
+        photoFile.delete()
 
-//        val outputFileOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
-
+        // 촬영한 사진을 버퍼에 저장하게 설정
+        val outputFileOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
 
         imageCapture.takePicture(outputFileOptions, ContextCompat.getMainExecutor(this),
             object : ImageCapture.OnImageSavedCallback {
@@ -105,11 +109,13 @@ class MainActivity : AppCompatActivity() {
                 override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
                     // insert your code here.
 
-                    // 촬영한 사진을 전처리 하고 결과를 화면에 띄워야 함.
-                    // 어디에 띄울꺼임????
-                    // 새로운 Activity에 가져가는게 맞는거 같음
+                    // 촬영한 사진을 굳이 ScanActivity로 보낼 필요가 있을까?
+                    // 버퍼에 있으니까 ScanActivity에서 버퍼에 있는 걸 꺼내 쓰면 안됨?
+                    
+                    // ScanActivity 실행
+                    startActivity(Intent(this@MainActivity, ScanActivity::class.java))
 
-                    Toast.makeText(this@MainActivity, "사진 찍음요!", Toast.LENGTH_SHORT).show()
+//                    Toast.makeText(this@MainActivity, "사진 찍음요!", Toast.LENGTH_SHORT).show()
                 }
             })
 
